@@ -329,7 +329,17 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
             // as the Channel is not registered yet we need to force the usage of the GlobalEventExecutor
             return new DefaultChannelPromise(new FailedChannel(), GlobalEventExecutor.INSTANCE).setFailure(t);
         }
-
+        /*
+            Channel的注册过程
+            1、在AbstractBootstrap的initAndRegister()方法中，通过group().register(channel)调用MultithreadEventExecutorGroup的register()方法
+            2、在MultithreadEventExecutorGroup的register()方法中，调用next()方法获取一个可用的SingleThreadEventLoop，然后调用它的register()方法
+            3、在SingleThreadEventLoop的register()方法中，调用channel.unsafe().register(this,promise)方法获取Channel的unsafe()底层操作
+               对象，然后调用Unsafe的register()方法
+            4、在AbstractUnsafe折register()方法中，调用register0()方法注册Channel对象
+            5、在AbstractUnsafe的register0()方法中，调用AbstractNioChannel的doRegister()方法
+            6、AbstractNioChannel的doRegister()方法通过javaChannel().register(eventLoop().selector,0,this)将Channel对应的Java
+               NIO的SocketChannel注册到一个eventLoop的Selector中，并将当前Channel作为Attachment与SocketChannel关联
+         */
         ChannelFuture regFuture = config().group().register(channel);
         if (regFuture.cause() != null) {
             if (channel.isRegistered()) {

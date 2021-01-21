@@ -51,6 +51,23 @@ import static io.netty.channel.internal.ChannelUtils.MAX_BYTES_PER_GATHERING_WRI
 /**
  * {@link io.netty.channel.socket.SocketChannel} which uses NIO selector based implementation.
  */
+/*
+    稍微总结一下NioSocketChannel初始化所做的工作内容
+    1、调用NioSocketChannel.newSocket(DEFAULT_SELECTOR_PROVIDER)打开一个新的Java NioSocketChannel
+    2、初始化AbstractChannel（Channel parent）对象并给属性赋值，具体赋值的属性如下：
+        id:每个Channel都会被分配一个唯一的id
+        parent:属性值默认为null
+        unsafe:通过调用newUnsafe()方法实例化一个Unsafe对象，它的类型是AbstractNioByteChannel.NioByteUnsafe内部类
+            Unsafe其实是对Java底层Socket操作的封装，因此它实际上是沟通Netty上层和Java底层的重要桥梁
+        pipeline:是通过调用new DefaultChannelPipeline(this)新创建的实例
+            在实例化一个Channel时必然都要实例化一个ChannelPipeline，
+    3、AbstractNioChannel中被赋值的属性如下：
+        ch:被赋值为Java原生SocketChannel，即NioSocketChannel的newSocket()方法返回的Java NIO SocketChannel
+        readInterestOp:被赋值为SelectionKey.OP_READ
+        ch:被配置为非阻塞，即调用ch.configureBlocking(false)方法
+    4、NioSocketChannel中被赋值的属性:
+        config:config = new NioSocketChannelConfig(this, socket.socket())
+ */
 public class NioSocketChannel extends AbstractNioByteChannel implements io.netty.channel.socket.SocketChannel {
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(NioSocketChannel.class);
     private static final SelectorProvider DEFAULT_SELECTOR_PROVIDER = SelectorProvider.provider();

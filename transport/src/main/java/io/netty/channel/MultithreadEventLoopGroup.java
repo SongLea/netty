@@ -30,6 +30,13 @@ import java.util.concurrent.ThreadFactory;
  * Abstract base class for {@link EventLoopGroup} implementations that handles their tasks with multiple threads at
  * the same time.
  */
+/*
+    简单总结：
+    1、创建一个大小为nThreads的SingleThreadEventExecutor数组
+    2、根据nThreads的大小，创建不同的Chooser，即如果nThreads是2的平方，则使用PowerOfTwoEventExecutorChooser，反之使用GenericEventExecutorChooser。
+       不论使用哪个Chooser，它们的功能都是一样的，即从children数组中选出一个合适的EventExecutor实例。
+    3、调用newChild()方法初始化children数组
+ */
 public abstract class MultithreadEventLoopGroup extends MultithreadEventExecutorGroup implements EventLoopGroup {
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(MultithreadEventLoopGroup.class);
@@ -49,6 +56,7 @@ public abstract class MultithreadEventLoopGroup extends MultithreadEventExecutor
      * @see MultithreadEventExecutorGroup#MultithreadEventExecutorGroup(int, Executor, Object...)
      */
     protected MultithreadEventLoopGroup(int nThreads, Executor executor, Object... args) {
+        // NioEventLoopGroup初始化2:继续调用父类的构造器,这里默认的线程数据(netty首先从系统属性获取‘io.netty.eventLoopThreads’的值,如果没有设置则使用CPU核数*2)
         super(nThreads == 0 ? DEFAULT_EVENT_LOOP_THREADS : nThreads, executor, args);
     }
 

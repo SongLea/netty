@@ -56,6 +56,7 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
              *
              *  See <a href="https://github.com/netty/netty/issues/2308">#2308</a>.
              */
+            // NioServerSocketChannel初始化2、客户端的newSocket()方法调用的是openSocketChannel,而服务端的newSocket()方法调用的是openServerSocketChannel
             return provider.openServerSocketChannel();
         } catch (IOException e) {
             throw new ChannelException(
@@ -68,6 +69,7 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     /**
      * Create a new instance
      */
+    // NioServerSocketChannel初始化1、ReflectiveChannelFactory的newChannel()方法通过反射调用这个无参构造器
     public NioServerSocketChannel() {
         this(newSocket(DEFAULT_SELECTOR_PROVIDER));
     }
@@ -82,8 +84,12 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     /**
      * Create a new instance using the given {@link ServerSocketChannel}.
      */
+    // NioServerSocketChannel初始化3、然后调用这个重载构造方法
     public NioServerSocketChannel(ServerSocketChannel channel) {
+        // 在这个构造方法中调用父类构造方法时传入的参数是SelectionKey.OP_ACCEPT,作为对比客户端Channel初始化时传入的参数是SelectionKey.OP_READ
+        // 这里设置为SelectionKey.OP_ACCEPT也就是通知Selector我们对客户端的连接请求感兴趣
         super(null, channel, SelectionKey.OP_ACCEPT);
+        // NioServerSocketChannel初始化12:给config属性赋值为new NioServerSocketChannelConfig(this, javaChannel().socket())
         config = new NioServerSocketChannelConfig(this, javaChannel().socket());
     }
 

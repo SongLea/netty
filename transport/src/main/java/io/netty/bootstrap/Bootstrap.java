@@ -84,6 +84,7 @@ public class Bootstrap extends AbstractBootstrap<Bootstrap, Channel> {
     /**
      * The {@link SocketAddress} to connect to once the {@link #connect()} method
      * is called.
+     *
      */
     public Bootstrap remoteAddress(SocketAddress remoteAddress) {
         this.remoteAddress = remoteAddress;

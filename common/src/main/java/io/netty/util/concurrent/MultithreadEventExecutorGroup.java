@@ -55,6 +55,7 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
      * @param args              arguments which will passed to each {@link #newChild(Executor, Object...)} call
      */
     protected MultithreadEventExecutorGroup(int nThreads, Executor executor, Object... args) {
+        // NioEventLoopGroup初始化3:这里的EventExecutorChooserFactory会使用默认的DefaultEventExecutorChooserFactory
         this(nThreads, executor, DefaultEventExecutorChooserFactory.INSTANCE, args);
     }
 
@@ -76,6 +77,7 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
             executor = new ThreadPerTaskExecutor(newDefaultThreadFactory());
         }
 
+        // NioEventLoopGroup初始化4:由各个子类实现
         children = new EventExecutor[nThreads];
 
         for (int i = 0; i < nThreads; i ++) {
@@ -108,6 +110,7 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
             }
         }
 
+        // 根据children的长度来创建不同的Chooser
         chooser = chooserFactory.newChooser(children);
 
         final FutureListener<Object> terminationListener = new FutureListener<Object>() {

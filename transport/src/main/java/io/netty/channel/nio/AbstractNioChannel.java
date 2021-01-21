@@ -81,10 +81,14 @@ public abstract class AbstractNioChannel extends AbstractChannel {
      * @param readInterestOp    the ops to set to receive data from the {@link SelectableChannel}
      */
     protected AbstractNioChannel(Channel parent, SelectableChannel ch, int readInterestOp) {
+        // NioServerSocketChannel初始化5:继续调用父类
         super(parent);
+        // NioServerSocketChannel初始化9:被赋值为Java NIO原生的ServerSocketChannel对象,通过调用NioServerSocketChannel的newSocket()方法获取
         this.ch = ch;
+        // NioServerSocketChannel初始化10:被赋值为SelectionKey.OP_ACCEPT
         this.readInterestOp = readInterestOp;
         try {
+            // NioServerSocketChannel初始化11:ch被设置为非阻塞
             ch.configureBlocking(false);
         } catch (IOException e) {
             try {

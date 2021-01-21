@@ -39,11 +39,13 @@ public abstract class AbstractNioMessageChannel extends AbstractNioChannel {
      * @see AbstractNioChannel#AbstractNioChannel(Channel, SelectableChannel, int)
      */
     protected AbstractNioMessageChannel(Channel parent, SelectableChannel ch, int readInterestOp) {
+        // NioServerSocketChannel初始化4:继续调用父类
         super(parent, ch, readInterestOp);
     }
 
     @Override
     protected AbstractNioUnsafe newUnsafe() {
+        // NioServerSocketChannel初始化7:AbstractNioMessageChannel重写了newUnsafe()方法
         return new NioMessageUnsafe();
     }
 

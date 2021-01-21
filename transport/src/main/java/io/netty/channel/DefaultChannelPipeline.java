@@ -90,10 +90,12 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     private boolean registered;
 
     protected DefaultChannelPipeline(Channel channel) {
+        // ChannelPipeline初始化2:DefaultChannelPipeline会将Channel对象保存到channel属性中
         this.channel = ObjectUtil.checkNotNull(channel, "channel");
         succeededFuture = new SucceededChannelFuture(channel, null);
         voidPromise =  new VoidChannelPromise(channel, true);
 
+        // DefaultChannelPipeline中维护了一个以AbstractChannelHandlerContext为节点元素的的双向链表,这个链表是Netty实现Pipeline机制的关键
         tail = new TailContext(this);
         head = new HeadContext(this);
 
@@ -1268,6 +1270,7 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     final class TailContext extends AbstractChannelHandlerContext implements ChannelInboundHandler {
 
         TailContext(DefaultChannelPipeline pipeline) {
+            // ChannelPipeline初始化3:它调用了父类AbstractChannelHandlerContext的构造器,并传入参数inbound=true,outbound=false
             super(pipeline, null, TAIL_NAME, true, false);
             setAddComplete();
         }
@@ -1331,6 +1334,7 @@ public class DefaultChannelPipeline implements ChannelPipeline {
         private final Unsafe unsafe;
 
         HeadContext(DefaultChannelPipeline pipeline) {
+            // ChannelPipeline初始化4:它调用了父类AbstractChannelHandlerContext的构造器,并传入参数inbound=false,outbound=true
             super(pipeline, null, HEAD_NAME, false, true);
             unsafe = pipeline.channel().unsafe();
             setAddComplete();
