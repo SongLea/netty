@@ -77,12 +77,13 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
             executor = new ThreadPerTaskExecutor(newDefaultThreadFactory());
         }
 
-        // NioEventLoopGroup初始化4:由各个子类实现
+        // EventLoopGroup(其实是MultithreadEventExecutorGroup)内部维护一个属性为EventExecutor的children的数组,其大小是nThreads,这样就初始化了一个线程池数组
         children = new EventExecutor[nThreads];
 
         for (int i = 0; i < nThreads; i ++) {
             boolean success = false;
             try {
+                // NioEventLoopGroup初始化4:由各个子类实现,在NioEventLoopGroup中就返回NioEventLoop实例
                 children[i] = newChild(executor, args);
                 success = true;
             } catch (Exception e) {

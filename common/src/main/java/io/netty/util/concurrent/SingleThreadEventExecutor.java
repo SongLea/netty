@@ -158,11 +158,13 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     protected SingleThreadEventExecutor(EventExecutorGroup parent, Executor executor,
                                         boolean addTaskWakesUp, int maxPendingTasks,
                                         RejectedExecutionHandler rejectedHandler) {
+        // NioEventLoop初始化3:调用AbstractScheduledEventExecutor的构造方法
         super(parent);
+        // NioEventLoop初始化4:addTaskWakesUp=false
         this.addTaskWakesUp = addTaskWakesUp;
         this.maxPendingTasks = Math.max(16, maxPendingTasks);
-        this.executor = ObjectUtil.checkNotNull(executor, "executor");
-        taskQueue = newTaskQueue(this.maxPendingTasks);
+        this.executor = ObjectUtil.checkNotNull(executor, "executor"); // NioEventLoop初始化时返回的是ThreadPerTaskExecutor
+        taskQueue = newTaskQueue(this.maxPendingTasks); // NioEventLoop初始化时这里返回 MpscUnboundedArrayQueue实例
         rejectedExecutionHandler = ObjectUtil.checkNotNull(rejectedHandler, "rejectedHandler");
     }
 

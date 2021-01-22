@@ -67,6 +67,18 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     /**
      * Specify the {@link EventLoopGroup} which is used for the parent (acceptor) and the child (client).
      */
+    /*
+        // 单线程模型在Netty中的应用代码如下：
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+        ServerBootstrap server = new ServerBootstrap();
+        // 当只传入一个group时,bossGroup与workerGroup就是同一个NioEventLoopGroup,且这个NioEventGroup线程池数量只设置了一个线程
+        server.group(bossGroup);
+
+        // 多线程模型在Netty中的应用代码如下：
+        EventLoopGroup bossGroup = new NioEventLoopGroup(128); // 只需要将NioEventLoopGroup的参数设置为大于1的数
+        ServerBootstrap server = new ServerBootstrap();
+        server.group(bossGroup);
+     */
     @Override
     public ServerBootstrap group(EventLoopGroup group) {
         return group(group, group);
@@ -76,6 +88,13 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
      * Set the {@link EventLoopGroup} for the parent (acceptor) and the child (client). These
      * {@link EventLoopGroup}'s are used to handle all the events and IO for {@link ServerChannel} and
      * {@link Channel}'s.
+     */
+    /*
+        // 主从Reactor多线程模型在Netty中的应用代码如下：、
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        ServerBootstrap server = new ServerBootstrap();
+        server.group(bossGroup, workerGroup);
      */
     public ServerBootstrap group(EventLoopGroup parentGroup, EventLoopGroup childGroup) {
         super.group(parentGroup);

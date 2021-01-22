@@ -44,6 +44,7 @@ public abstract class AbstractScheduledEventExecutor extends AbstractEventExecut
     }
 
     protected AbstractScheduledEventExecutor(EventExecutorGroup parent) {
+        // NioEventLoop初始化4:调用AbstractEventExecutor的构造方法,将属性parent赋值为参数中的parent
         super(parent);
     }
 

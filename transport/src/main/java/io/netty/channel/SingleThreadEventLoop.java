@@ -55,8 +55,9 @@ public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor im
     protected SingleThreadEventLoop(EventLoopGroup parent, Executor executor,
                                     boolean addTaskWakesUp, int maxPendingTasks,
                                     RejectedExecutionHandler rejectedExecutionHandler) {
+        // NioEventLoop初始化2:调用SingleThreadEventExecutor的构造方法(parent:NioEventLoopGroup;executor:ThreadPerTaskExecutor;addTaskWakesUp:false;maxPendingTasks:2147483647)
         super(parent, executor, addTaskWakesUp, maxPendingTasks, rejectedExecutionHandler);
-        tailTasks = newTaskQueue(maxPendingTasks);
+        tailTasks = newTaskQueue(maxPendingTasks); // NioEventLoop初始化时这里返回MpscUnboundedArrayQueue实例
     }
 
     @Override
